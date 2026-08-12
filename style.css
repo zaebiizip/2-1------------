@@ -1,0 +1,428 @@
+* {
+    box-sizing: border-box;
+  }
+  
+  body {
+    margin: 0;
+    font-family:
+      -apple-system,
+      BlinkMacSystemFont,
+      "Segoe UI",
+      "Noto Sans KR",
+      sans-serif;
+  
+    background: #f5f7fb;
+    color: #202124;
+  }
+  
+  .header {
+    background: white;
+    border-bottom: 1px solid #e5e7eb;
+  
+    padding: 28px max(20px, calc((100% - 1000px) / 2));
+  
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .header h1 {
+    margin: 0 0 6px;
+    font-size: 26px;
+  }
+  
+  .header p {
+    margin: 0;
+    color: #6b7280;
+  }
+  
+  main {
+    width: min(1000px, calc(100% - 32px));
+    margin: 35px auto;
+  }
+  
+  .main-section {
+    margin-bottom: 45px;
+  }
+  
+  .section-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  
+    margin-bottom: 16px;
+  }
+  
+  .section-title h2 {
+    margin: 0;
+  }
+  
+  .performance-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .performance-card {
+    background: white;
+  
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+  
+    padding: 18px;
+  
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.03);
+  
+    transition: transform 0.15s;
+  }
+  
+  .performance-card:hover {
+    transform: translateY(-2px);
+  }
+  
+  .performance-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  
+    margin-bottom: 8px;
+  }
+  
+  .subject {
+    font-size: 14px;
+    font-weight: 700;
+    color: #4f46e5;
+  }
+  
+  .dday {
+    font-weight: 800;
+  }
+  
+  .dday-danger {
+    color: #dc2626;
+  }
+  
+  .dday-warning {
+    color: #ea580c;
+  }
+  
+  .dday-normal {
+    color: #2563eb;
+  }
+  
+  .performance-title {
+    margin: 0 0 8px;
+    font-size: 19px;
+  }
+  
+  .performance-date {
+    color: #6b7280;
+    font-size: 14px;
+  }
+  
+  .materials {
+    margin-top: 10px;
+  
+    padding: 10px;
+  
+    background: #f8fafc;
+  
+    border-radius: 8px;
+  
+    font-size: 14px;
+  }
+  
+  .description {
+    margin-top: 10px;
+  
+    color: #4b5563;
+    font-size: 14px;
+  
+    white-space: pre-wrap;
+  }
+  
+  .empty {
+    padding: 35px;
+  
+    text-align: center;
+  
+    color: #9ca3af;
+  
+    background: white;
+  
+    border-radius: 14px;
+  
+    border: 1px dashed #d1d5db;
+  }
+  
+  button {
+    border: none;
+    cursor: pointer;
+    font: inherit;
+  }
+  
+  .admin-button {
+    background: #111827;
+    color: white;
+  
+    padding: 10px 16px;
+  
+    border-radius: 9px;
+  }
+  
+  .primary-button {
+    width: 100%;
+  
+    background: #4f46e5;
+    color: white;
+  
+    padding: 12px;
+  
+    border-radius: 9px;
+  
+    font-weight: 700;
+  }
+  
+  .secondary-button {
+    background: #e5e7eb;
+  
+    padding: 9px 14px;
+  
+    border-radius: 8px;
+  }
+  
+  .close-button {
+    position: absolute;
+  
+    top: 15px;
+    right: 18px;
+  
+    background: none;
+  
+    font-size: 25px;
+  }
+  
+  select,
+  input,
+  textarea {
+    width: 100%;
+  
+    padding: 11px 12px;
+  
+    border: 1px solid #d1d5db;
+  
+    border-radius: 8px;
+  
+    background: white;
+  
+    font: inherit;
+  
+    outline: none;
+  }
+  
+  select:focus,
+  input:focus,
+  textarea:focus {
+    border-color: #6366f1;
+  }
+  
+  textarea {
+    min-height: 120px;
+    resize: vertical;
+  }
+  
+  .modal {
+    position: fixed;
+  
+    inset: 0;
+  
+    background: rgba(0, 0, 0, 0.45);
+  
+    display: flex;
+  
+    justify-content: center;
+    align-items: center;
+  
+    padding: 20px;
+  
+    z-index: 1000;
+  }
+  
+  .modal-box {
+    position: relative;
+  
+    width: min(400px, 100%);
+  
+    background: white;
+  
+    padding: 30px;
+  
+    border-radius: 16px;
+  }
+  
+  .modal-box h2 {
+    margin-top: 0;
+  }
+  
+  .modal-box input {
+    margin: 20px 0 10px;
+  }
+  
+  .error-text {
+    color: #dc2626;
+    font-size: 13px;
+  }
+  
+  .admin-panel {
+    width: min(1000px, calc(100% - 32px));
+  
+    margin: 30px auto 60px;
+  
+    background: white;
+  
+    padding: 25px;
+  
+    border-radius: 16px;
+  
+    border: 1px solid #e5e7eb;
+  }
+  
+  .admin-header {
+    display: flex;
+  
+    justify-content: space-between;
+    align-items: center;
+  
+    margin-bottom: 25px;
+  }
+  
+  .admin-header h2 {
+    margin: 0 0 5px;
+  }
+  
+  .admin-header p {
+    margin: 0;
+    color: #6b7280;
+  }
+  
+  .subject-manager {
+    margin-bottom: 20px;
+  }
+  
+  .subject-manager label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 700;
+  }
+  
+  .form-box {
+    margin-top: 20px;
+  
+    padding: 20px;
+  
+    border: 1px solid #e5e7eb;
+  
+    border-radius: 12px;
+  }
+  
+  .form-box h3 {
+    margin-top: 0;
+  }
+  
+  .form-box label {
+    display: block;
+  
+    margin-bottom: 14px;
+  
+    font-weight: 600;
+  }
+  
+  .form-box input,
+  .form-box textarea {
+    margin-top: 7px;
+    font-weight: 400;
+  }
+  
+  .admin-performance {
+    display: flex;
+  
+    justify-content: space-between;
+    align-items: center;
+  
+    gap: 15px;
+  
+    padding: 14px;
+  
+    border-bottom: 1px solid #e5e7eb;
+  }
+  
+  .admin-performance:last-child {
+    border-bottom: none;
+  }
+  
+  .delete-button {
+    background: #fee2e2;
+  
+    color: #b91c1c;
+  
+    padding: 7px 10px;
+  
+    border-radius: 7px;
+  
+    white-space: nowrap;
+  }
+  
+  footer {
+    text-align: center;
+  
+    padding: 30px;
+  
+    color: #9ca3af;
+  
+    font-size: 13px;
+  }
+  
+  .hidden {
+    display: none !important;
+  }
+  
+  @media (max-width: 600px) {
+  
+    .header {
+      padding: 20px 16px;
+    }
+  
+    .header h1 {
+      font-size: 21px;
+    }
+  
+    .admin-button {
+      padding: 8px 11px;
+      font-size: 13px;
+    }
+  
+    main {
+      width: calc(100% - 24px);
+      margin-top: 25px;
+    }
+  
+    .section-title {
+      align-items: flex-start;
+      gap: 10px;
+      flex-direction: column;
+    }
+  
+    .performance-card {
+      padding: 15px;
+    }
+  
+    .admin-panel {
+      width: calc(100% - 24px);
+      padding: 18px;
+    }
+  
+    .admin-performance {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+  }

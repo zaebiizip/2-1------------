@@ -1,4 +1,31 @@
+// ============================================================
+// Supabase 설정
+// ============================================================
+
+const SUPABASE_URL =
+  "https://tuovwqvtmbksrmghhbss.supabase.co";
+
+const SUPABASE_KEY =
+  "sb_publishable__vWzcQJOQ_55aRQqqxWBoQ_BR7z0_3f";
+
+
+const supabaseClient =
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  );
+
+
+// ============================================================
+// 관리자 비밀번호
+// ============================================================
+
 const ADMIN_PASSWORD = "1234";
+
+
+// ============================================================
+// 과목 목록
+// ============================================================
 
 const SUBJECTS = [
   "독서와 작문",
@@ -18,103 +45,235 @@ const SUBJECTS = [
   "인공지능 기초"
 ];
 
+
+// ============================================================
+// 데이터
+// ============================================================
+
 let performances = [];
 
-try {
-  const savedData = localStorage.getItem("performances");
 
-  if (savedData) {
-    const parsedData = JSON.parse(savedData);
+// ============================================================
+// Supabase에서 데이터 불러오기
+// ============================================================
 
-    if (Array.isArray(parsedData)) {
-      performances = parsedData;
-    }
+async function loadPerformances() {
+
+  const {
+    data,
+    error
+  } = await supabaseClient
+    .from("assignments")
+    .select("*")
+    .order("due_date", {
+      ascending: true
+    });
+
+
+  if (error) {
+
+    console.error(
+      "Supabase에서 데이터를 불러오지 못했습니다.",
+      error
+    );
+
+    return;
   }
-} catch (error) {
-  console.error("저장된 데이터를 불러오는 데 실패했습니다.", error);
-  performances = [];
+
+
+  performances = data.map(item => ({
+    id: String(item.id),
+    subject: item.subject,
+    title: item.title,
+    date: item.due_date,
+    materials: item.materials || "",
+    description: item.description || ""
+  }));
+
+
+  renderUpcoming();
+  renderAll();
+  renderAdminList();
 }
 
-function saveData() {
-  localStorage.setItem(
-    "performances",
-    JSON.stringify(performances)
-  );
-}
+
+// ============================================================
+// 수행평가 정렬
+// ============================================================
 
 function sortPerformances() {
+
   performances.sort(
     (a, b) =>
-      new Date(a.date) - new Date(b.date)
+      new Date(a.date) -
+      new Date(b.date)
   );
+
 }
+
+
+// ============================================================
+// 오늘 날짜
+// ============================================================
 
 function getToday() {
+
   const today = new Date();
 
-  today.setHours(0, 0, 0, 0);
+  today.setHours(
+    0,
+    0,
+    0,
+    0
+  );
 
   return today;
+
 }
+
+
+// ============================================================
+// D-Day 계산
+// ============================================================
 
 function getDDay(dateString) {
-  const today = getToday();
 
-  const target = new Date(`${dateString}T00:00:00`);
+  const today =
+    getToday();
+
+  const target =
+    new Date(
+      `${dateString}T00:00:00`
+    );
 
   const difference =
-    target.getTime() - today.getTime();
+    target.getTime() -
+    today.getTime();
 
   return Math.ceil(
-    difference / (1000 * 60 * 60 * 24)
+    difference /
+    (1000 * 60 * 60 * 24)
   );
+
 }
 
+
+// ============================================================
+// D-Day 표시
+// ============================================================
+
 function getDDayText(dday) {
+
   if (dday === 0) {
     return "D-DAY";
   }
+
 
   if (dday > 0) {
     return `D-${dday}`;
   }
 
+
   return "완료";
+
 }
+
+
+// ============================================================
+// D-Day CSS 클래스
+// ============================================================
 
 function getDDayClass(dday) {
-  if (dday >= 0 && dday <= 3) {
+
+  if (
+    dday >= 0 &&
+    dday <= 3
+  ) {
+
     return "dday-danger";
+
   }
 
-  if (dday >= 0 && dday <= 7) {
+
+  if (
+    dday >= 0 &&
+    dday <= 7
+  ) {
+
     return "dday-warning";
+
   }
+
 
   return "dday-normal";
+
 }
+
+
+// ============================================================
+// 날짜 표시
+// ============================================================
 
 function formatDate(dateString) {
-  const parts = dateString.split("-");
 
-  if (parts.length !== 3) {
+  const parts =
+    dateString.split("-");
+
+
+  if (
+    parts.length !== 3
+  ) {
+
     return dateString;
+
   }
 
+
   return `${parts[0]}.${parts[1]}.${parts[2]}`;
+
 }
+
+
+// ============================================================
+// HTML 보안 처리
+// ============================================================
 
 function escapeHTML(value) {
+
   return String(value)
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
+    .replaceAll(
+      "&",
+      "&amp;"
+    )
+    .replaceAll(
+      "<",
+      "&lt;"
+    )
+    .replaceAll(
+      ">",
+      "&gt;"
+    )
+    .replaceAll(
+      '"',
+      "&quot;"
+    )
+    .replaceAll(
+      "'",
+      "&#039;"
+    );
+
 }
 
+
+// ============================================================
+// 수행평가 카드
+// ============================================================
+
 function createPerformanceCard(item) {
-  const dday = getDDay(item.date);
+
+  const dday =
+    getDDay(item.date);
+
 
   return `
     <article class="performance-card">
@@ -161,23 +320,45 @@ function createPerformanceCard(item) {
 
     </article>
   `;
+
 }
 
+
+// ============================================================
+// 다가오는 수행평가
+// ============================================================
+
 function renderUpcoming() {
+
   const container =
-    document.getElementById("upcomingList");
+    document.getElementById(
+      "upcomingList"
+    );
+
+
+  if (!container) {
+    return;
+  }
+
 
   sortPerformances();
 
+
   const upcoming =
     performances.filter(
-      item => getDDay(item.date) >= 0
+      item =>
+        getDDay(item.date) >= 0
     );
+
 
   const visible =
     upcoming.slice(0, 5);
 
-  if (visible.length === 0) {
+
+  if (
+    visible.length === 0
+  ) {
+
     container.innerHTML = `
       <div class="empty">
         다가오는 수행평가가 없습니다 🎉
@@ -187,34 +368,68 @@ function renderUpcoming() {
     return;
   }
 
+
   container.innerHTML =
     visible
-      .map(createPerformanceCard)
+      .map(
+        createPerformanceCard
+      )
       .join("");
+
 }
 
+
+// ============================================================
+// 전체 일정
+// ============================================================
+
 function renderAll() {
+
   const container =
-    document.getElementById("allList");
+    document.getElementById(
+      "allList"
+    );
+
+
+  if (!container) {
+    return;
+  }
+
 
   const filter =
-    document.getElementById("subjectFilter").value;
+    document.getElementById(
+      "subjectFilter"
+    ).value;
+
 
   sortPerformances();
 
+
   let list =
     performances.filter(
-      item => getDDay(item.date) >= 0
+      item =>
+        getDDay(item.date) >= 0
     );
 
-  if (filter !== "all") {
+
+  if (
+    filter !== "all"
+  ) {
+
     list =
       list.filter(
-        item => item.subject === filter
+        item =>
+          item.subject ===
+          filter
       );
+
   }
 
-  if (list.length === 0) {
+
+  if (
+    list.length === 0
+  ) {
+
     container.innerHTML = `
       <div class="empty">
         등록된 수행평가가 없습니다.
@@ -224,57 +439,126 @@ function renderAll() {
     return;
   }
 
+
   container.innerHTML =
     list
-      .map(createPerformanceCard)
+      .map(
+        createPerformanceCard
+      )
       .join("");
+
 }
+
+
+// ============================================================
+// 과목 선택지 생성
+// ============================================================
 
 function initializeSubjects() {
+
   const subjectFilter =
-    document.getElementById("subjectFilter");
+    document.getElementById(
+      "subjectFilter"
+    );
+
 
   const adminSubject =
-    document.getElementById("adminSubject");
-
-  SUBJECTS.forEach(subject => {
-
-    const option1 =
-      document.createElement("option");
-
-    option1.value = subject;
-    option1.textContent = subject;
-
-    subjectFilter.appendChild(option1);
+    document.getElementById(
+      "adminSubject"
+    );
 
 
-    const option2 =
-      document.createElement("option");
+  SUBJECTS.forEach(
+    subject => {
 
-    option2.value = subject;
-    option2.textContent = subject;
+      const option1 =
+        document.createElement(
+          "option"
+        );
 
-    adminSubject.appendChild(option2);
 
-  });
+      option1.value =
+        subject;
+
+      option1.textContent =
+        subject;
+
+
+      subjectFilter.appendChild(
+        option1
+      );
+
+
+      const option2 =
+        document.createElement(
+          "option"
+        );
+
+
+      option2.value =
+        subject;
+
+      option2.textContent =
+        subject;
+
+
+      adminSubject.appendChild(
+        option2
+      );
+
+    }
+  );
+
 }
 
+
+// ============================================================
+// 관리자 목록
+// ============================================================
+
 function renderAdminList() {
-  const subject =
-    document.getElementById("adminSubject").value;
+
+  const adminSubject =
+    document.getElementById(
+      "adminSubject"
+    );
 
   const container =
-    document.getElementById("adminList");
+    document.getElementById(
+      "adminList"
+    );
 
   const title =
-    document.getElementById("selectedSubjectName");
+    document.getElementById(
+      "selectedSubjectName"
+    );
 
-  title.textContent = subject;
+
+  if (
+    !adminSubject ||
+    !container ||
+    !title
+  ) {
+
+    return;
+
+  }
+
+
+  const subject =
+    adminSubject.value;
+
+
+  title.textContent =
+    subject;
+
 
   const list =
     performances
       .filter(
-        item => item.subject === subject
+        item =>
+          item.subject ===
+          subject
       )
       .sort(
         (a, b) =>
@@ -282,7 +566,11 @@ function renderAdminList() {
           new Date(b.date)
       );
 
-  if (list.length === 0) {
+
+  if (
+    list.length === 0
+  ) {
+
     container.innerHTML = `
       <div class="empty">
         등록된 수행평가가 없습니다.
@@ -292,299 +580,553 @@ function renderAdminList() {
     return;
   }
 
+
   container.innerHTML =
     list
-      .map(item => `
-        <div class="admin-performance">
-
-          <div>
-
-            <strong>
-              ${escapeHTML(item.title)}
-            </strong>
+      .map(
+        item => `
+          <div class="admin-performance">
 
             <div>
-              ${formatDate(item.date)}
+
+              <strong>
+                ${escapeHTML(item.title)}
+              </strong>
+
+              <div>
+                ${formatDate(item.date)}
+              </div>
+
+              ${
+                item.materials
+                  ? `
+                    <small>
+                      📌 ${escapeHTML(item.materials)}
+                    </small>
+                  `
+                  : ""
+              }
+
             </div>
 
-            ${
-              item.materials
-                ? `
-                  <small>
-                    📌 ${escapeHTML(item.materials)}
-                  </small>
-                `
-                : ""
-            }
+            <button
+              class="delete-button"
+              data-id="${escapeHTML(item.id)}"
+            >
+              삭제
+            </button>
 
           </div>
-
-          <button
-            class="delete-button"
-            data-id="${escapeHTML(item.id)}"
-          >
-            삭제
-          </button>
-
-        </div>
-      `)
+        `
+      )
       .join("");
 
+
   container
-    .querySelectorAll(".delete-button")
-    .forEach(button => {
+    .querySelectorAll(
+      ".delete-button"
+    )
+    .forEach(
+      button => {
 
-      button.addEventListener(
-        "click",
-        () => {
-          deletePerformance(button.dataset.id);
-        }
-      );
+        button.addEventListener(
+          "click",
+          () => {
 
-    });
+            deletePerformance(
+              button.dataset.id
+            );
+
+          }
+        );
+
+      }
+    );
+
 }
 
-function addPerformance() {
+
+// ============================================================
+// 수행평가 추가
+// ============================================================
+
+async function addPerformance() {
+
   const subject =
-    document.getElementById("adminSubject").value;
+    document.getElementById(
+      "adminSubject"
+    ).value;
+
 
   const title =
     document
-      .getElementById("performanceTitle")
+      .getElementById(
+        "performanceTitle"
+      )
       .value
       .trim();
+
 
   const date =
     document
-      .getElementById("performanceDate")
+      .getElementById(
+        "performanceDate"
+      )
       .value;
+
 
   const materials =
     document
-      .getElementById("performanceMaterials")
+      .getElementById(
+        "performanceMaterials"
+      )
       .value
       .trim();
+
 
   const description =
     document
-      .getElementById("performanceDescription")
+      .getElementById(
+        "performanceDescription"
+      )
       .value
       .trim();
 
+
   if (!title) {
-    alert("수행평가명을 입력하세요.");
+
+    alert(
+      "수행평가명을 입력하세요."
+    );
+
     return;
+
   }
+
 
   if (!date) {
-    alert("날짜를 입력하세요.");
+
+    alert(
+      "날짜를 입력하세요."
+    );
+
     return;
+
   }
 
-  const newPerformance = {
-    id: crypto.randomUUID
-      ? crypto.randomUUID()
-      : Date.now().toString(),
 
-    subject,
-    title,
-    date,
-    materials,
-    description
-  };
+  // ==========================================================
+  // Supabase에 저장
+  // ==========================================================
 
-  performances.push(newPerformance);
+  const {
+    error
+  } = await supabaseClient
+    .from("assignments")
+    .insert({
+      subject: subject,
+      title: title,
+      due_date: date,
+      materials: materials,
+      description: description
+    });
 
-  saveData();
+
+  if (error) {
+
+    console.error(
+      "수행평가 추가 실패:",
+      error
+    );
+
+
+    alert(
+      "수행평가 추가에 실패했습니다.\n\n" +
+      error.message
+    );
+
+    return;
+
+  }
+
+
+  // 입력창 초기화
 
   document
-    .getElementById("performanceTitle")
+    .getElementById(
+      "performanceTitle"
+    )
     .value = "";
+
 
   document
-    .getElementById("performanceDate")
+    .getElementById(
+      "performanceDate"
+    )
     .value = "";
+
 
   document
-    .getElementById("performanceMaterials")
+    .getElementById(
+      "performanceMaterials"
+    )
     .value = "";
+
 
   document
-    .getElementById("performanceDescription")
+    .getElementById(
+      "performanceDescription"
+    )
     .value = "";
 
-  renderAll();
-  renderUpcoming();
-  renderAdminList();
 
-  alert("수행평가가 추가되었습니다.");
+  // DB에서 다시 불러오기
+
+  await loadPerformances();
+
+
+  alert(
+    "수행평가가 추가되었습니다."
+  );
+
 }
 
-function deletePerformance(id) {
+
+// ============================================================
+// 수행평가 삭제
+// ============================================================
+
+async function deletePerformance(id) {
+
   const confirmed =
     confirm(
       "정말 이 수행평가를 삭제할까요?"
     );
 
+
   if (!confirmed) {
+
     return;
+
   }
 
-  performances =
-    performances.filter(
-      item => item.id !== id
+
+  // ==========================================================
+  // Supabase에서 삭제
+  // ==========================================================
+
+  const {
+    error
+  } = await supabaseClient
+    .from("assignments")
+    .delete()
+    .eq("id", id);
+
+
+  if (error) {
+
+    console.error(
+      "수행평가 삭제 실패:",
+      error
     );
 
-  saveData();
 
-  renderAll();
-  renderUpcoming();
-  renderAdminList();
+    alert(
+      "삭제에 실패했습니다.\n\n" +
+      error.message
+    );
+
+    return;
+
+  }
+
+
+  // DB에서 다시 불러오기
+
+  await loadPerformances();
+
 }
+
+
+// ============================================================
+// 관리자 로그인
+// ============================================================
 
 function openLogin() {
-  document
-    .getElementById("loginModal")
-    .classList.remove("hidden");
 
   document
-    .getElementById("passwordInput")
+    .getElementById(
+      "loginModal"
+    )
+    .classList.remove(
+      "hidden"
+    );
+
+
+  document
+    .getElementById(
+      "passwordInput"
+    )
     .focus();
+
 }
+
+
+// ============================================================
+// 로그인 창 닫기
+// ============================================================
 
 function closeLogin() {
-  document
-    .getElementById("loginModal")
-    .classList.add("hidden");
 
   document
-    .getElementById("loginError")
+    .getElementById(
+      "loginModal"
+    )
+    .classList.add(
+      "hidden"
+    );
+
+
+  document
+    .getElementById(
+      "loginError"
+    )
     .textContent = "";
+
 }
 
+
+// ============================================================
+// 로그인
+// ============================================================
+
 function login() {
+
   const password =
     document
-      .getElementById("passwordInput")
+      .getElementById(
+        "passwordInput"
+      )
       .value;
 
-  if (password === ADMIN_PASSWORD) {
+
+  if (
+    password ===
+    ADMIN_PASSWORD
+  ) {
 
     closeLogin();
 
-    document
-      .getElementById("adminPanel")
-      .classList.remove("hidden");
 
     document
-      .getElementById("adminPanel")
+      .getElementById(
+        "adminPanel"
+      )
+      .classList.remove(
+        "hidden"
+      );
+
+
+    document
+      .getElementById(
+        "adminPanel"
+      )
       .scrollIntoView({
         behavior: "smooth"
       });
 
+
     renderAdminList();
 
+
     document
-      .getElementById("passwordInput")
+      .getElementById(
+        "passwordInput"
+      )
       .value = "";
+
 
   } else {
 
     document
-      .getElementById("loginError")
+      .getElementById(
+        "loginError"
+      )
       .textContent =
         "비밀번호가 올바르지 않습니다.";
 
   }
+
 }
+
+
+// ============================================================
+// 로그아웃
+// ============================================================
 
 function logout() {
+
   document
-    .getElementById("adminPanel")
-    .classList.add("hidden");
+    .getElementById(
+      "adminPanel"
+    )
+    .classList.add(
+      "hidden"
+    );
+
 }
 
+
+// ============================================================
+// 오늘 날짜 표시
+// ============================================================
+
 function renderToday() {
-  const today = new Date();
+
+  const today =
+    new Date();
+
 
   const year =
     today.getFullYear();
 
+
   const month =
     today.getMonth() + 1;
+
 
   const day =
     today.getDate();
 
+
   document
-    .getElementById("todayText")
+    .getElementById(
+      "todayText"
+    )
     .textContent =
       `${year}.${month}.${day} 기준`;
+
 }
 
+
+// ============================================================
+// 이벤트 연결
+// ============================================================
+
 document
-  .getElementById("adminButton")
+  .getElementById(
+    "adminButton"
+  )
   .addEventListener(
     "click",
     openLogin
   );
 
+
 document
-  .getElementById("closeLogin")
+  .getElementById(
+    "closeLogin"
+  )
   .addEventListener(
     "click",
     closeLogin
   );
 
+
 document
-  .getElementById("loginButton")
+  .getElementById(
+    "loginButton"
+  )
   .addEventListener(
     "click",
     login
   );
 
+
 document
-  .getElementById("logoutButton")
+  .getElementById(
+    "logoutButton"
+  )
   .addEventListener(
     "click",
     logout
   );
 
+
 document
-  .getElementById("addPerformance")
+  .getElementById(
+    "addPerformance"
+  )
   .addEventListener(
     "click",
     addPerformance
   );
 
+
 document
-  .getElementById("adminSubject")
+  .getElementById(
+    "adminSubject"
+  )
   .addEventListener(
     "change",
     renderAdminList
   );
 
+
 document
-  .getElementById("subjectFilter")
+  .getElementById(
+    "subjectFilter"
+  )
   .addEventListener(
     "change",
     renderAll
   );
 
+
 document
-  .getElementById("passwordInput")
+  .getElementById(
+    "passwordInput"
+  )
   .addEventListener(
     "keydown",
     event => {
 
-      if (event.key === "Enter") {
+      if (
+        event.key ===
+        "Enter"
+      ) {
+
         login();
+
       }
 
     }
   );
 
+
+// ============================================================
+// 초기화
+// ============================================================
+
 initializeSubjects();
+
 renderToday();
-renderUpcoming();
-renderAll();
+
+
+// Supabase에서 최초 데이터 불러오기
+loadPerformances();
+
+
+// ============================================================
+// 자동 동기화
+// ============================================================
+//
+// 10초마다 Supabase를 다시 확인한다.
+// 다른 사람이 일정을 추가/삭제하면
+// 최대 약 10초 이내에 화면에도 반영된다.
+// ============================================================
+
+setInterval(
+  loadPerformances,
+  10000
+);

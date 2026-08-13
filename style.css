@@ -1,804 +1,1040 @@
-// ============================================================
-// Supabase 설정
-// ============================================================
+/* =========================================================
+   수행평가 일정
+   Main Stylesheet
+   ========================================================= */
 
-const SUPABASE_URL = "https://tuovwqvtmbksrmghhbss.supabase.co";
-const SUPABASE_KEY = "sb_publishable__vWzcQJOQ_55aRQqqxWBoQ_BR7z0_3f";
+/* ---------------------------------------------------------
+   기본 설정
+   --------------------------------------------------------- */
 
-const supabaseClient = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_KEY
-);
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    "Noto Sans KR",
+    "Apple SD Gothic Neo",
+    sans-serif;
+  background: #f4f7fb;
+  color: #172033;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid rgba(79, 70, 229, 0.22);
+  outline-offset: 2px;
+}
+
+a {
+  color: inherit;
+}
 
 
-// ============================================================
-// 관리자 비밀번호
-// ============================================================
+/* ---------------------------------------------------------
+   전체 레이아웃
+   --------------------------------------------------------- */
 
-const ADMIN_PASSWORD = "1234";
+body {
+  padding-bottom: 80px;
+}
 
-
-// ============================================================
-// 과목 목록
-// ============================================================
-
-const SUBJECTS = [
-  "독서와 작문",
-  "문학과 영상",
-  "미적분I",
-  "수학과제탐구",
-  "영어II",
-  "영미문학읽기",
-  "정치",
-  "인문학과 윤리",
-  "동아시아 역사기행",
-  "한국지리탐구",
-  "역학과 에너지",
-  "물질과 에너지",
-  "세포와 물질대사",
-  "지구시스템과학",
-  "인공지능 기초"
-];
+body > * {
+  position: relative;
+}
 
 
-// ============================================================
-// 데이터
-// ============================================================
+/* ---------------------------------------------------------
+   Header
+   --------------------------------------------------------- */
 
-let performances = [];
+.header {
+  position: relative;
+  width: min(1100px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 56px 0 34px;
+}
+
+.header::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100vw;
+  right: -100vw;
+  height: 260px;
+  background:
+    radial-gradient(
+      circle at 15% 20%,
+      rgba(99, 102, 241, 0.18),
+      transparent 35%
+    ),
+    radial-gradient(
+      circle at 85% 15%,
+      rgba(14, 165, 233, 0.14),
+      transparent 32%
+    ),
+    linear-gradient(
+      135deg,
+      #eef2ff 0%,
+      #f8fbff 55%,
+      #eef9ff 100%
+    );
+  z-index: -1;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: clamp(2rem, 5vw, 3.25rem);
+  line-height: 1.15;
+  letter-spacing: -0.055em;
+  font-weight: 850;
+  color: #111827;
+}
+
+.header h1::before {
+  content: "📚";
+  display: inline-block;
+  margin-right: 14px;
+  font-size: 0.78em;
+  vertical-align: 0.08em;
+}
+
+.header p {
+  margin: 16px 0 24px;
+  color: #64748b;
+  font-size: 1.03rem;
+}
 
 
-// ============================================================
-// Supabase에서 수행평가 불러오기
-// ============================================================
+/* ---------------------------------------------------------
+   Main Content
+   --------------------------------------------------------- */
 
-async function loadPerformances() {
+main,
+.container,
+.content {
+  width: min(1100px, calc(100% - 32px));
+  margin-left: auto;
+  margin-right: auto;
+}
 
-  const { data, error } = await supabaseClient
-    .from("assignments")
-    .select("*")
-    .order("due_date", { ascending: true });
+section {
+  margin: 22px auto;
+}
 
-  if (error) {
-    console.error("수행평가 데이터를 불러오지 못했습니다.", error);
 
-    alert(
-      "수행평가 데이터를 불러오지 못했습니다.\n" +
-      "Supabase 설정을 확인해주세요."
+/* ---------------------------------------------------------
+   공통 카드
+   --------------------------------------------------------- */
+
+section,
+#upcomingList,
+#allList,
+#adminPanel {
+  position: relative;
+}
+
+section {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid #e7ebf3;
+  border-radius: 24px;
+  padding: 28px;
+  box-shadow:
+    0 10px 30px rgba(15, 23, 42, 0.055),
+    0 2px 6px rgba(15, 23, 42, 0.025);
+}
+
+section h2 {
+  margin: 0 0 18px;
+  color: #111827;
+  font-size: 1.55rem;
+  letter-spacing: -0.035em;
+  line-height: 1.3;
+}
+
+section h3 {
+  letter-spacing: -0.025em;
+}
+
+
+/* ---------------------------------------------------------
+   관리자 버튼
+   --------------------------------------------------------- */
+
+#adminButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  min-height: 44px;
+  padding: 0 18px;
+
+  border: 1px solid #d8def0;
+  border-radius: 12px;
+
+  background: #ffffff;
+  color: #374151;
+
+  font-size: 0.94rem;
+  font-weight: 700;
+
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
+
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease,
+    border-color 0.18s ease,
+    background 0.18s ease;
+}
+
+#adminButton:hover {
+  transform: translateY(-1px);
+  border-color: #c7cff0;
+  background: #f8f9ff;
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.09);
+}
+
+#adminButton:active {
+  transform: translateY(0);
+}
+
+
+/* ---------------------------------------------------------
+   오늘 날짜
+   --------------------------------------------------------- */
+
+#todayText {
+  display: inline-flex;
+  align-items: center;
+
+  margin: 0 0 16px;
+  padding: 7px 12px;
+
+  border-radius: 999px;
+  background: #eef2ff;
+  color: #4f46e5;
+
+  font-size: 0.86rem;
+  font-weight: 750;
+}
+
+
+/* ---------------------------------------------------------
+   다가오는 수행평가
+   --------------------------------------------------------- */
+
+#upcomingList {
+  display: grid;
+  gap: 14px;
+}
+
+#upcomingList .performance-card {
+  border-left: 4px solid #6366f1;
+}
+
+
+/* ---------------------------------------------------------
+   수행평가 카드
+   --------------------------------------------------------- */
+
+.performance-card {
+  position: relative;
+
+  padding: 20px 21px;
+
+  border: 1px solid #e6eaf1;
+  border-radius: 18px;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 5px 16px rgba(15, 23, 42, 0.045);
+
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease,
+    border-color 0.18s ease;
+}
+
+.performance-card:hover {
+  transform: translateY(-2px);
+  border-color: #d9def0;
+  box-shadow:
+    0 12px 26px rgba(15, 23, 42, 0.08);
+}
+
+.performance-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+
+  margin-bottom: 10px;
+}
+
+.subject {
+  display: inline-flex;
+  align-items: center;
+
+  min-height: 28px;
+  padding: 3px 10px;
+
+  border-radius: 999px;
+  background: #f0f2ff;
+  color: #4f46e5;
+
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: -0.015em;
+}
+
+.performance-title {
+  margin: 0 0 8px;
+
+  color: #172033;
+  font-size: 1.12rem;
+  line-height: 1.45;
+  font-weight: 800;
+  letter-spacing: -0.035em;
+}
+
+.performance-date {
+  color: #64748b;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.materials {
+  margin-top: 12px;
+  padding: 10px 12px;
+
+  border-radius: 10px;
+  background: #f8fafc;
+  color: #475569;
+
+  font-size: 0.88rem;
+}
+
+.description {
+  margin-top: 10px;
+
+  color: #64748b;
+  font-size: 0.9rem;
+  white-space: pre-wrap;
+}
+
+
+/* ---------------------------------------------------------
+   D-Day
+   --------------------------------------------------------- */
+
+.dday {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-width: 66px;
+  min-height: 30px;
+  padding: 4px 10px;
+
+  border-radius: 999px;
+
+  font-size: 0.76rem;
+  font-weight: 850;
+  letter-spacing: 0.01em;
+}
+
+.dday-danger {
+  background: #fff0f0;
+  color: #dc2626;
+}
+
+.dday-warning {
+  background: #fff7df;
+  color: #c27803;
+}
+
+.dday-normal {
+  background: #edf7f1;
+  color: #15803d;
+}
+
+
+/* ---------------------------------------------------------
+   전체 일정
+   --------------------------------------------------------- */
+
+#allList {
+  display: grid;
+  gap: 14px;
+}
+
+#subjectFilter {
+  width: 100%;
+  max-width: 300px;
+  margin-bottom: 18px;
+}
+
+
+/* ---------------------------------------------------------
+   Select / Input / Textarea
+   --------------------------------------------------------- */
+
+select,
+input[type="text"],
+input[type="password"],
+input[type="date"],
+textarea {
+  width: 100%;
+
+  border: 1px solid #dce2ec;
+  border-radius: 11px;
+
+  background: #ffffff;
+  color: #172033;
+
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease,
+    background 0.18s ease;
+}
+
+select,
+input[type="text"],
+input[type="password"],
+input[type="date"] {
+  min-height: 44px;
+  padding: 0 12px;
+}
+
+textarea {
+  min-height: 90px;
+  padding: 11px 12px;
+  resize: vertical;
+}
+
+select:hover,
+input:hover,
+textarea:hover {
+  border-color: #c7cfdd;
+}
+
+select:focus,
+input:focus,
+textarea:focus {
+  border-color: #818cf8;
+  background: #ffffff;
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+  outline: none;
+}
+
+::placeholder {
+  color: #a0a8b7;
+}
+
+
+/* ---------------------------------------------------------
+   Empty 상태
+   --------------------------------------------------------- */
+
+.empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 110px;
+  padding: 24px;
+
+  border: 1px dashed #d7deea;
+  border-radius: 16px;
+
+  background: #fafbfe;
+  color: #8a94a6;
+
+  font-size: 0.94rem;
+  text-align: center;
+}
+
+
+/* ---------------------------------------------------------
+   관리자 패널
+   --------------------------------------------------------- */
+
+#adminPanel {
+  margin-top: 28px;
+  padding: 28px;
+
+  border: 1px solid #dddff4;
+  border-radius: 24px;
+
+  background:
+    linear-gradient(
+      145deg,
+      #ffffff 0%,
+      #fafaff 100%
     );
 
-    return;
+  box-shadow:
+    0 16px 40px rgba(79, 70, 229, 0.07);
+}
+
+#adminPanel h2 {
+  margin-top: 0;
+}
+
+#adminPanel h3 {
+  margin: 30px 0 14px;
+  font-size: 1.15rem;
+}
+
+
+/* ---------------------------------------------------------
+   관리자 상단 영역
+   --------------------------------------------------------- */
+
+#logoutButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 40px;
+  padding: 0 15px;
+
+  border: 1px solid #e1e5ec;
+  border-radius: 10px;
+
+  background: #ffffff;
+  color: #64748b;
+
+  font-size: 0.88rem;
+  font-weight: 700;
+
+  transition:
+    background 0.18s ease,
+    color 0.18s ease,
+    border-color 0.18s ease;
+}
+
+#logoutButton:hover {
+  border-color: #fecaca;
+  background: #fff5f5;
+  color: #dc2626;
+}
+
+
+/* ---------------------------------------------------------
+   관리자 과목 선택
+   --------------------------------------------------------- */
+
+#adminSubject {
+  max-width: 360px;
+}
+
+#selectedSubjectName {
+  margin-top: 18px;
+  margin-bottom: 12px;
+
+  color: #4f46e5;
+  font-size: 1.1rem;
+  font-weight: 800;
+}
+
+
+/* ---------------------------------------------------------
+   수행평가 추가 폼
+   --------------------------------------------------------- */
+
+#adminPanel > div {
+  position: relative;
+}
+
+#performanceTitle,
+#performanceDate,
+#performanceMaterials,
+#performanceDescription {
+  vertical-align: middle;
+}
+
+
+/* 입력창들이 한 줄로 배치되는 기존 HTML을
+   화면 크기에 맞게 자연스럽게 정리 */
+
+#performanceTitle {
+  width: 210px;
+}
+
+#performanceDate {
+  width: 150px;
+}
+
+#performanceMaterials {
+  width: 220px;
+}
+
+#performanceDescription {
+  width: 250px;
+  min-height: 44px;
+  height: 44px;
+  resize: vertical;
+}
+
+
+/* ---------------------------------------------------------
+   주요 버튼
+   --------------------------------------------------------- */
+
+#addPerformance,
+#loginButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 44px;
+  padding: 0 17px;
+
+  border: 0;
+  border-radius: 11px;
+
+  background: #4f46e5;
+  color: #ffffff;
+
+  font-weight: 800;
+  font-size: 0.9rem;
+
+  box-shadow:
+    0 6px 14px rgba(79, 70, 229, 0.2);
+
+  transition:
+    transform 0.18s ease,
+    background 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+#addPerformance:hover,
+#loginButton:hover {
+  transform: translateY(-1px);
+  background: #4338ca;
+  box-shadow:
+    0 9px 20px rgba(79, 70, 229, 0.26);
+}
+
+#addPerformance:active,
+#loginButton:active {
+  transform: translateY(0);
+}
+
+
+/* ---------------------------------------------------------
+   관리자 목록
+   --------------------------------------------------------- */
+
+#adminList {
+  display: grid;
+  gap: 10px;
+}
+
+.admin-performance {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+
+  padding: 15px 17px;
+
+  border: 1px solid #e7eaf0;
+  border-radius: 14px;
+
+  background: #ffffff;
+
+  transition:
+    border-color 0.18s ease,
+    background 0.18s ease;
+}
+
+.admin-performance:hover {
+  border-color: #d8def0;
+  background: #fafbff;
+}
+
+.admin-performance strong {
+  display: block;
+
+  margin-bottom: 3px;
+
+  color: #172033;
+  font-size: 0.95rem;
+}
+
+.admin-performance div div {
+  color: #7b8494;
+  font-size: 0.82rem;
+}
+
+.admin-performance small {
+  display: block;
+  margin-top: 5px;
+  color: #64748b;
+}
+
+
+/* ---------------------------------------------------------
+   삭제 버튼
+   --------------------------------------------------------- */
+
+.delete-button {
+  flex: 0 0 auto;
+
+  min-height: 36px;
+  padding: 0 12px;
+
+  border: 1px solid #fecaca;
+  border-radius: 9px;
+
+  background: #fff7f7;
+  color: #dc2626;
+
+  font-size: 0.8rem;
+  font-weight: 750;
+
+  transition:
+    background 0.18s ease,
+    border-color 0.18s ease;
+}
+
+.delete-button:hover {
+  border-color: #fca5a5;
+  background: #fee2e2;
+}
+
+
+/* ---------------------------------------------------------
+   로그인 모달
+   --------------------------------------------------------- */
+
+#loginModal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 20px;
+
+  background: rgba(15, 23, 42, 0.48);
+  backdrop-filter: blur(7px);
+  -webkit-backdrop-filter: blur(7px);
+}
+
+#loginModal.hidden {
+  display: none;
+}
+
+#loginModal > div {
+  width: min(430px, 100%);
+  padding: 30px;
+
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 24px;
+
+  background: rgba(255, 255, 255, 0.97);
+
+  box-shadow:
+    0 25px 70px rgba(15, 23, 42, 0.22);
+}
+
+#loginModal h2 {
+  margin: 0 0 8px;
+
+  color: #111827;
+  font-size: 1.45rem;
+  letter-spacing: -0.04em;
+}
+
+#loginModal p {
+  margin: 0 0 20px;
+  color: #7b8494;
+  font-size: 0.9rem;
+}
+
+#passwordInput {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+#closeLogin {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 44px;
+  padding: 0 15px;
+
+  margin-left: 7px;
+
+  border: 1px solid #e1e5ec;
+  border-radius: 11px;
+
+  background: #ffffff;
+  color: #64748b;
+
+  font-weight: 700;
+
+  transition:
+    background 0.18s ease,
+    border-color 0.18s ease;
+}
+
+#closeLogin:hover {
+  background: #f8fafc;
+  border-color: #cfd6e2;
+}
+
+#loginError {
+  min-height: 22px;
+  margin: 8px 0 0;
+
+  color: #dc2626;
+  font-size: 0.84rem;
+  font-weight: 650;
+}
+
+
+/* ---------------------------------------------------------
+   hidden 유틸리티
+   --------------------------------------------------------- */
+
+.hidden {
+  display: none !important;
+}
+
+
+/* ---------------------------------------------------------
+   스크롤바
+   --------------------------------------------------------- */
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #eef1f6;
+}
+
+::-webkit-scrollbar-thumb {
+  border: 2px solid #eef1f6;
+  border-radius: 999px;
+  background: #c5ccda;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #aeb7c7;
+}
+
+
+/* ---------------------------------------------------------
+   반응형 - 태블릿
+   --------------------------------------------------------- */
+
+@media (max-width: 850px) {
+  .header {
+    padding-top: 40px;
   }
 
-  performances = data.map(item => ({
-    id: String(item.id),
-    subject: item.subject,
-    title: item.title,
-    date: item.due_date,
-    materials: item.materials || "",
-    description: item.description || ""
-  }));
-
-  renderAll();
-  renderUpcoming();
-  renderAdminList();
-}
-
-
-// ============================================================
-// 정렬
-// ============================================================
-
-function sortPerformances() {
-
-  performances.sort(
-    (a, b) =>
-      new Date(a.date) - new Date(b.date)
-  );
-}
-
-
-// ============================================================
-// 오늘
-// ============================================================
-
-function getToday() {
-
-  const today = new Date();
-
-  today.setHours(0, 0, 0, 0);
-
-  return today;
-}
-
-
-// ============================================================
-// D-Day
-// ============================================================
-
-function getDDay(dateString) {
-
-  const today = getToday();
-
-  const target =
-    new Date(`${dateString}T00:00:00`);
-
-  const difference =
-    target.getTime() - today.getTime();
-
-  return Math.ceil(
-    difference / (1000 * 60 * 60 * 24)
-  );
-}
-
-
-function getDDayText(dday) {
-
-  if (dday === 0) {
-    return "D-DAY";
+  section,
+  #adminPanel {
+    padding: 22px;
+    border-radius: 20px;
   }
 
-  if (dday > 0) {
-    return `D-${dday}`;
+  #performanceTitle {
+    width: 190px;
   }
 
-  return "완료";
-}
-
-
-function getDDayClass(dday) {
-
-  if (dday >= 0 && dday <= 3) {
-    return "dday-danger";
+  #performanceMaterials {
+    width: 190px;
   }
 
-  if (dday >= 0 && dday <= 7) {
-    return "dday-warning";
-  }
-
-  return "dday-normal";
-}
-
-
-// ============================================================
-// 날짜 표시
-// ============================================================
-
-function formatDate(dateString) {
-
-  const parts = dateString.split("-");
-
-  if (parts.length !== 3) {
-    return dateString;
-  }
-
-  return `${parts[0]}.${parts[1]}.${parts[2]}`;
-}
-
-
-// ============================================================
-// HTML 보안 처리
-// ============================================================
-
-function escapeHTML(value) {
-
-  return String(value)
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
-}
-
-
-// ============================================================
-// 수행평가 카드
-// ============================================================
-
-function createPerformanceCard(item) {
-
-  const dday = getDDay(item.date);
-
-  return `
-    <article class="performance-card">
-
-      <div class="performance-top">
-
-        <span class="subject">
-          ${escapeHTML(item.subject)}
-        </span>
-
-        <span class="dday ${getDDayClass(dday)}">
-          ${getDDayText(dday)}
-        </span>
-
-      </div>
-
-      <h3 class="performance-title">
-        ${escapeHTML(item.title)}
-      </h3>
-
-      <div class="performance-date">
-        📅 ${formatDate(item.date)}
-      </div>
-
-      ${
-        item.materials
-          ? `
-            <div class="materials">
-              📌 ${escapeHTML(item.materials)}
-            </div>
-          `
-          : ""
-      }
-
-      ${
-        item.description
-          ? `
-            <div class="description">
-              ${escapeHTML(item.description)}
-            </div>
-          `
-          : ""
-      }
-
-    </article>
-  `;
-}
-
-
-// ============================================================
-// 다가오는 수행평가
-// ============================================================
-
-function renderUpcoming() {
-
-  const container =
-    document.getElementById("upcomingList");
-
-  sortPerformances();
-
-  const upcoming =
-    performances.filter(
-      item => getDDay(item.date) >= 0
-    );
-
-  const visible =
-    upcoming.slice(0, 5);
-
-  if (visible.length === 0) {
-
-    container.innerHTML = `
-      <div class="empty">
-        다가오는 수행평가가 없습니다 🎉
-      </div>
-    `;
-
-    return;
-  }
-
-  container.innerHTML =
-    visible
-      .map(createPerformanceCard)
-      .join("");
-}
-
-
-// ============================================================
-// 전체 일정
-// ============================================================
-
-function renderAll() {
-
-  const container =
-    document.getElementById("allList");
-
-  const filter =
-    document.getElementById("subjectFilter").value;
-
-  sortPerformances();
-
-  let list =
-    performances.filter(
-      item => getDDay(item.date) >= 0
-    );
-
-  if (filter !== "all") {
-
-    list =
-      list.filter(
-        item => item.subject === filter
-      );
-  }
-
-  if (list.length === 0) {
-
-    container.innerHTML = `
-      <div class="empty">
-        등록된 수행평가가 없습니다.
-      </div>
-    `;
-
-    return;
-  }
-
-  container.innerHTML =
-    list
-      .map(createPerformanceCard)
-      .join("");
-}
-
-
-// ============================================================
-// 과목 선택지
-// ============================================================
-
-function initializeSubjects() {
-
-  const subjectFilter =
-    document.getElementById("subjectFilter");
-
-  const adminSubject =
-    document.getElementById("adminSubject");
-
-  SUBJECTS.forEach(subject => {
-
-    const option1 =
-      document.createElement("option");
-
-    option1.value = subject;
-    option1.textContent = subject;
-
-    subjectFilter.appendChild(option1);
-
-
-    const option2 =
-      document.createElement("option");
-
-    option2.value = subject;
-    option2.textContent = subject;
-
-    adminSubject.appendChild(option2);
-
-  });
-}
-
-
-// ============================================================
-// 관리자 목록
-// ============================================================
-
-function renderAdminList() {
-
-  const subject =
-    document.getElementById("adminSubject").value;
-
-  const container =
-    document.getElementById("adminList");
-
-  const title =
-    document.getElementById("selectedSubjectName");
-
-  title.textContent = subject;
-
-  const list =
-    performances
-      .filter(
-        item => item.subject === subject
-      )
-      .sort(
-        (a, b) =>
-          new Date(a.date) -
-          new Date(b.date)
-      );
-
-  if (list.length === 0) {
-
-    container.innerHTML = `
-      <div class="empty">
-        등록된 수행평가가 없습니다.
-      </div>
-    `;
-
-    return;
-  }
-
-  container.innerHTML =
-    list
-      .map(item => `
-        <div class="admin-performance">
-
-          <div>
-
-            <strong>
-              ${escapeHTML(item.title)}
-            </strong>
-
-            <div>
-              ${formatDate(item.date)}
-            </div>
-
-            ${
-              item.materials
-                ? `
-                  <small>
-                    📌 ${escapeHTML(item.materials)}
-                  </small>
-                `
-                : ""
-            }
-
-          </div>
-
-          <button
-            class="delete-button"
-            data-id="${escapeHTML(item.id)}"
-          >
-            삭제
-          </button>
-
-        </div>
-      `)
-      .join("");
-
-
-  container
-    .querySelectorAll(".delete-button")
-    .forEach(button => {
-
-      button.addEventListener(
-        "click",
-        () => {
-          deletePerformance(button.dataset.id);
-        }
-      );
-
-    });
-}
-
-
-// ============================================================
-// 수행평가 추가
-// ============================================================
-
-async function addPerformance() {
-
-  const subject =
-    document.getElementById("adminSubject").value;
-
-  const title =
-    document
-      .getElementById("performanceTitle")
-      .value
-      .trim();
-
-  const date =
-    document
-      .getElementById("performanceDate")
-      .value;
-
-  const materials =
-    document
-      .getElementById("performanceMaterials")
-      .value
-      .trim();
-
-  const description =
-    document
-      .getElementById("performanceDescription")
-      .value
-      .trim();
-
-
-  if (!title) {
-
-    alert("수행평가명을 입력하세요.");
-
-    return;
-  }
-
-
-  if (!date) {
-
-    alert("날짜를 입력하세요.");
-
-    return;
-  }
-
-
-  const { error } =
-    await supabaseClient
-      .from("assignments")
-      .insert({
-        subject: subject,
-        title: title,
-        due_date: date,
-        materials: materials,
-        description: description
-      });
-
-
-  if (error) {
-
-    console.error(
-      "수행평가 추가 실패:",
-      error
-    );
-
-    alert(
-      "수행평가 추가에 실패했습니다.\n" +
-      error.message
-    );
-
-    return;
-  }
-
-
-  document
-    .getElementById("performanceTitle")
-    .value = "";
-
-  document
-    .getElementById("performanceDate")
-    .value = "";
-
-  document
-    .getElementById("performanceMaterials")
-    .value = "";
-
-  document
-    .getElementById("performanceDescription")
-    .value = "";
-
-
-  await loadPerformances();
-
-  alert("수행평가가 추가되었습니다.");
-}
-
-
-// ============================================================
-// 수행평가 삭제
-// ============================================================
-
-async function deletePerformance(id) {
-
-  const confirmed =
-    confirm(
-      "정말 이 수행평가를 삭제할까요?"
-    );
-
-  if (!confirmed) {
-    return;
-  }
-
-
-  const { error } =
-    await supabaseClient
-      .from("assignments")
-      .delete()
-      .eq("id", id);
-
-
-  if (error) {
-
-    console.error(
-      "수행평가 삭제 실패:",
-      error
-    );
-
-    alert(
-      "삭제에 실패했습니다.\n" +
-      error.message
-    );
-
-    return;
-  }
-
-
-  await loadPerformances();
-}
-
-
-// ============================================================
-// 관리자 로그인
-// ============================================================
-
-function openLogin() {
-
-  document
-    .getElementById("loginModal")
-    .classList.remove("hidden");
-
-  document
-    .getElementById("passwordInput")
-    .focus();
-}
-
-
-function closeLogin() {
-
-  document
-    .getElementById("loginModal")
-    .classList.add("hidden");
-
-  document
-    .getElementById("loginError")
-    .textContent = "";
-}
-
-
-function login() {
-
-  const password =
-    document
-      .getElementById("passwordInput")
-      .value;
-
-
-  if (password === ADMIN_PASSWORD) {
-
-    closeLogin();
-
-    document
-      .getElementById("adminPanel")
-      .classList.remove("hidden");
-
-    document
-      .getElementById("adminPanel")
-      .scrollIntoView({
-        behavior: "smooth"
-      });
-
-    renderAdminList();
-
-    document
-      .getElementById("passwordInput")
-      .value = "";
-
-  } else {
-
-    document
-      .getElementById("loginError")
-      .textContent =
-        "비밀번호가 올바르지 않습니다.";
-
+  #performanceDescription {
+    width: 210px;
   }
 }
 
 
-// ============================================================
-// 로그아웃
-// ============================================================
+/* ---------------------------------------------------------
+   반응형 - 모바일
+   --------------------------------------------------------- */
 
-function logout() {
+@media (max-width: 640px) {
+  body {
+    padding-bottom: 40px;
+  }
 
-  document
-    .getElementById("adminPanel")
-    .classList.add("hidden");
+  .header,
+  main,
+  .container,
+  .content {
+    width: min(100% - 20px, 1100px);
+  }
+
+  .header {
+    padding: 34px 0 24px;
+  }
+
+  .header h1 {
+    font-size: 2rem;
+  }
+
+  .header h1::before {
+    margin-right: 8px;
+  }
+
+  .header p {
+    font-size: 0.92rem;
+  }
+
+  section,
+  #adminPanel {
+    padding: 18px;
+    border-radius: 18px;
+  }
+
+  section h2 {
+    font-size: 1.3rem;
+  }
+
+  .performance-card {
+    padding: 17px;
+  }
+
+  .performance-top {
+    align-items: flex-start;
+  }
+
+  .performance-title {
+    font-size: 1rem;
+  }
+
+  .dday {
+    min-width: 60px;
+    font-size: 0.72rem;
+  }
+
+  #subjectFilter,
+  #adminSubject {
+    max-width: none;
+  }
+
+  #adminPanel > div {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+  }
+
+  #performanceTitle,
+  #performanceDate,
+  #performanceMaterials,
+  #performanceDescription,
+  #addPerformance {
+    width: 100%;
+    max-width: none;
+  }
+
+  #performanceDescription {
+    height: 90px;
+  }
+
+  .admin-performance {
+    align-items: flex-start;
+  }
+
+  .admin-performance .delete-button {
+    margin-top: 1px;
+  }
+
+  #loginModal > div {
+    padding: 24px;
+    border-radius: 20px;
+  }
 }
 
 
-// ============================================================
-// 오늘 날짜
-// ============================================================
+/* ---------------------------------------------------------
+   아주 작은 화면
+   --------------------------------------------------------- */
 
-function renderToday() {
+@media (max-width: 400px) {
+  .performance-top {
+    flex-direction: column;
+    gap: 7px;
+  }
 
-  const today = new Date();
+  .dday {
+    align-self: flex-start;
+  }
 
-  const year =
-    today.getFullYear();
+  .admin-performance {
+    flex-direction: column;
+    gap: 10px;
+  }
 
-  const month =
-    today.getMonth() + 1;
+  .admin-performance .delete-button {
+    width: 100%;
+  }
 
-  const day =
-    today.getDate();
+  #loginButton,
+  #closeLogin {
+    width: 100%;
+    margin: 0;
+  }
 
-  document
-    .getElementById("todayText")
-    .textContent =
-      `${year}.${month}.${day} 기준`;
+  #closeLogin {
+    margin-top: 7px;
+  }
 }
 
 
-// ============================================================
-// 이벤트
-// ============================================================
+/* ---------------------------------------------------------
+   모션 최소화 설정
+   --------------------------------------------------------- */
 
-document
-  .getElementById("adminButton")
-  .addEventListener(
-    "click",
-    openLogin
-  );
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
 
-
-document
-  .getElementById("closeLogin")
-  .addEventListener(
-    "click",
-    closeLogin
-  );
-
-
-document
-  .getElementById("loginButton")
-  .addEventListener(
-    "click",
-    login
-  );
-
-
-document
-  .getElementById("logoutButton")
-  .addEventListener(
-    "click",
-    logout
-  );
-
-
-document
-  .getElementById("addPerformance")
-  .addEventListener(
-    "click",
-    addPerformance
-  );
-
-
-document
-  .getElementById("adminSubject")
-  .addEventListener(
-    "change",
-    renderAdminList
-  );
-
-
-document
-  .getElementById("subjectFilter")
-  .addEventListener(
-    "change",
-    renderAll
-  );
-
-
-document
-  .getElementById("passwordInput")
-  .addEventListener(
-    "keydown",
-    event => {
-
-      if (event.key === "Enter") {
-        login();
-      }
-
-    }
-  );
-
-
-// ============================================================
-// 시작
-// ============================================================
-
-initializeSubjects();
-
-renderToday();
-
-
-// Supabase에서 최초 데이터 가져오기
-loadPerformances();
-
-
-// ============================================================
-// 다른 사람이 수정한 내용을 자동으로 확인
-// ============================================================
-
-// 10초마다 DB를 확인한다.
-// 따라서 반장 PC에서 수정하면 다른 사람의 페이지도
-// 최대 약 10초 안에 업데이트된다.
-
-setInterval(
-  loadPerformances,
-  10000
-);
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

@@ -1,14 +1,7 @@
 /* =========================================================
-   수행평가 일정
-   Main Stylesheet
+   우리 반 수행평가 일정
+   Editorial / Study Mood
    ========================================================= */
-body {
-  background: red !important;
-}
-
-/* ---------------------------------------------------------
-   기본 설정
-   --------------------------------------------------------- */
 
 * {
   box-sizing: border-box;
@@ -18,9 +11,42 @@ html {
   scroll-behavior: smooth;
 }
 
+:root {
+  --bg: #f7f5f0;
+  --paper: #fffdf8;
+  --paper-soft: #fbfaf6;
+
+  --ink: #20252f;
+  --muted: #7c818a;
+  --light-muted: #a2a6ad;
+
+  --line: #e9e6df;
+  --line-dark: #dedad1;
+
+  --navy: #293449;
+  --navy-soft: #eef1f6;
+
+  --lavender: #8177b8;
+  --lavender-soft: #f0eef9;
+
+  --green: #65836f;
+  --green-soft: #edf4ef;
+
+  --yellow: #a98243;
+  --yellow-soft: #f8f1e3;
+
+  --red: #b96565;
+  --red-soft: #faeded;
+
+  --radius-lg: 26px;
+  --radius-md: 18px;
+  --radius-sm: 12px;
+}
+
 body {
   margin: 0;
   min-height: 100vh;
+
   font-family:
     -apple-system,
     BlinkMacSystemFont,
@@ -28,9 +54,23 @@ body {
     "Noto Sans KR",
     "Apple SD Gothic Neo",
     sans-serif;
-  background: #f4f7fb;
-  color: #172033;
+
+  background:
+    radial-gradient(
+      circle at 8% 0%,
+      rgba(129, 119, 184, 0.08),
+      transparent 28%
+    ),
+    radial-gradient(
+      circle at 92% 12%,
+      rgba(101, 131, 111, 0.07),
+      transparent 24%
+    ),
+    var(--bg);
+
+  color: var(--ink);
   line-height: 1.6;
+
   -webkit-font-smoothing: antialiased;
 }
 
@@ -49,21 +89,16 @@ button:focus-visible,
 input:focus-visible,
 select:focus-visible,
 textarea:focus-visible {
-  outline: 3px solid rgba(79, 70, 229, 0.22);
-  outline-offset: 2px;
+  outline: 3px solid rgba(129, 119, 184, 0.2);
+  outline-offset: 3px;
 }
 
 a {
   color: inherit;
 }
 
-
-/* ---------------------------------------------------------
-   전체 레이아웃
-   --------------------------------------------------------- */
-
 body {
-  padding-bottom: 80px;
+  padding-bottom: 90px;
 }
 
 body > * {
@@ -71,122 +106,172 @@ body > * {
 }
 
 
-/* ---------------------------------------------------------
-   Header
-   --------------------------------------------------------- */
+/* =========================================================
+   HEADER
+   ========================================================= */
 
 .header {
   position: relative;
+
   width: min(1100px, calc(100% - 32px));
   margin: 0 auto;
-  padding: 56px 0 34px;
+
+  padding: 72px 0 48px;
 }
 
 .header::before {
   content: "";
+
   position: absolute;
+
   top: 0;
   left: -100vw;
   right: -100vw;
-  height: 260px;
+
+  height: 330px;
+
   background:
     radial-gradient(
-      circle at 15% 20%,
-      rgba(99, 102, 241, 0.18),
-      transparent 35%
+      circle at 12% 18%,
+      rgba(129, 119, 184, 0.13),
+      transparent 32%
     ),
     radial-gradient(
-      circle at 85% 15%,
-      rgba(14, 165, 233, 0.14),
-      transparent 32%
+      circle at 88% 10%,
+      rgba(101, 131, 111, 0.11),
+      transparent 30%
     ),
     linear-gradient(
       135deg,
-      #eef2ff 0%,
-      #f8fbff 55%,
-      #eef9ff 100%
+      #f1eff8 0%,
+      #faf8f3 48%,
+      #eef4ef 100%
     );
+
+  border-bottom: 1px solid rgba(220, 216, 207, 0.7);
+
   z-index: -1;
 }
 
 .header h1 {
   margin: 0;
-  font-size: clamp(2rem, 5vw, 3.25rem);
-  line-height: 1.15;
-  letter-spacing: -0.055em;
+
+  max-width: 800px;
+
+  color: var(--ink);
+
+  font-size: clamp(2.2rem, 6vw, 4.2rem);
+  line-height: 1.08;
+
+  letter-spacing: -0.065em;
   font-weight: 850;
-  color: #111827;
 }
 
 .header h1::before {
-  content: "📚";
+  content: "✦";
+
   display: inline-block;
+
   margin-right: 14px;
-  font-size: 0.78em;
-  vertical-align: 0.08em;
+
+  color: var(--lavender);
+
+  font-size: 0.55em;
+  vertical-align: 0.18em;
 }
 
 .header p {
-  margin: 16px 0 24px;
-  color: #64748b;
-  font-size: 1.03rem;
+  margin: 18px 0 26px;
+
+  max-width: 620px;
+
+  color: var(--muted);
+
+  font-size: 1rem;
+  letter-spacing: -0.02em;
 }
 
 
-/* ---------------------------------------------------------
-   Main Content
-   --------------------------------------------------------- */
+/* =========================================================
+   LAYOUT
+   ========================================================= */
 
 main,
 .container,
 .content {
   width: min(1100px, calc(100% - 32px));
+
   margin-left: auto;
   margin-right: auto;
 }
 
 section {
-  margin: 22px auto;
+  margin: 24px auto;
 }
 
 
-/* ---------------------------------------------------------
-   공통 카드
-   --------------------------------------------------------- */
-
-section,
-#upcomingList,
-#allList,
-#adminPanel {
-  position: relative;
-}
+/* =========================================================
+   SECTION CARD
+   ========================================================= */
 
 section {
-  background: rgba(255, 255, 255, 0.9);
-  border: 1px solid #e7ebf3;
-  border-radius: 24px;
-  padding: 28px;
+  position: relative;
+
+  background: rgba(255, 253, 248, 0.9);
+
+  border: 1px solid var(--line);
+
+  border-radius: var(--radius-lg);
+
+  padding: 30px;
+
   box-shadow:
-    0 10px 30px rgba(15, 23, 42, 0.055),
-    0 2px 6px rgba(15, 23, 42, 0.025);
+    0 12px 35px rgba(47, 45, 39, 0.045),
+    0 2px 8px rgba(47, 45, 39, 0.025);
+
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+section::before {
+  content: "";
+
+  position: absolute;
+
+  top: 0;
+  left: 28px;
+  right: 28px;
+
+  height: 1px;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(129, 119, 184, 0.35),
+      transparent
+    );
 }
 
 section h2 {
-  margin: 0 0 18px;
-  color: #111827;
-  font-size: 1.55rem;
-  letter-spacing: -0.035em;
+  margin: 0 0 20px;
+
+  color: var(--ink);
+
+  font-size: 1.5rem;
   line-height: 1.3;
+
+  letter-spacing: -0.045em;
 }
 
 section h3 {
-  letter-spacing: -0.025em;
+  letter-spacing: -0.03em;
 }
 
 
-/* ---------------------------------------------------------
-   관리자 버튼
-   --------------------------------------------------------- */
+/* =========================================================
+   ADMIN BUTTON
+   ========================================================= */
 
 #adminButton {
   display: inline-flex;
@@ -195,31 +280,38 @@ section h3 {
   gap: 8px;
 
   min-height: 44px;
-  padding: 0 18px;
 
-  border: 1px solid #d8def0;
-  border-radius: 12px;
+  padding: 0 17px;
 
-  background: #ffffff;
-  color: #374151;
+  border: 1px solid var(--line-dark);
+  border-radius: 999px;
 
-  font-size: 0.94rem;
-  font-weight: 700;
+  background: rgba(255, 253, 248, 0.78);
 
-  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
+  color: #555c67;
+
+  font-size: 0.88rem;
+  font-weight: 750;
+
+  box-shadow:
+    0 5px 16px rgba(40, 38, 34, 0.045);
 
   transition:
-    transform 0.18s ease,
-    box-shadow 0.18s ease,
-    border-color 0.18s ease,
-    background 0.18s ease;
+    transform 0.2s ease,
+    background 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 #adminButton:hover {
-  transform: translateY(-1px);
-  border-color: #c7cff0;
-  background: #f8f9ff;
-  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.09);
+  transform: translateY(-2px);
+
+  background: #ffffff;
+
+  border-color: #cbc6d9;
+
+  box-shadow:
+    0 9px 22px rgba(40, 38, 34, 0.08);
 }
 
 #adminButton:active {
@@ -227,29 +319,47 @@ section h3 {
 }
 
 
-/* ---------------------------------------------------------
-   오늘 날짜
-   --------------------------------------------------------- */
+/* =========================================================
+   TODAY
+   ========================================================= */
 
 #todayText {
   display: inline-flex;
   align-items: center;
 
-  margin: 0 0 16px;
-  padding: 7px 12px;
+  margin: 0 0 18px;
 
+  padding: 6px 12px;
+
+  border: 1px solid #e0dcef;
   border-radius: 999px;
-  background: #eef2ff;
-  color: #4f46e5;
 
-  font-size: 0.86rem;
-  font-weight: 750;
+  background: var(--lavender-soft);
+
+  color: var(--lavender);
+
+  font-size: 0.8rem;
+  font-weight: 800;
+
+  letter-spacing: -0.015em;
+}
+
+#todayText::before {
+  content: "TODAY";
+
+  margin-right: 7px;
+
+  font-size: 0.62rem;
+
+  letter-spacing: 0.08em;
+
+  opacity: 0.65;
 }
 
 
-/* ---------------------------------------------------------
-   다가오는 수행평가
-   --------------------------------------------------------- */
+/* =========================================================
+   UPCOMING
+   ========================================================= */
 
 #upcomingList {
   display: grid;
@@ -257,44 +367,48 @@ section h3 {
 }
 
 #upcomingList .performance-card {
-  border-left: 4px solid #6366f1;
+  border-left: 3px solid var(--lavender);
 }
 
 
-/* ---------------------------------------------------------
-   수행평가 카드
-   --------------------------------------------------------- */
+/* =========================================================
+   PERFORMANCE CARD
+   ========================================================= */
 
 .performance-card {
   position: relative;
 
-  padding: 20px 21px;
+  padding: 21px 22px;
 
-  border: 1px solid #e6eaf1;
-  border-radius: 18px;
+  border: 1px solid var(--line);
 
-  background: #ffffff;
+  border-radius: var(--radius-md);
+
+  background: var(--paper);
 
   box-shadow:
-    0 5px 16px rgba(15, 23, 42, 0.045);
+    0 5px 18px rgba(47, 45, 39, 0.035);
 
   transition:
-    transform 0.18s ease,
-    box-shadow 0.18s ease,
-    border-color 0.18s ease;
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
 }
 
 .performance-card:hover {
-  transform: translateY(-2px);
-  border-color: #d9def0;
+  transform: translateY(-3px);
+
+  border-color: #ddd8ce;
+
   box-shadow:
-    0 12px 26px rgba(15, 23, 42, 0.08);
+    0 14px 30px rgba(47, 45, 39, 0.075);
 }
 
 .performance-top {
   display: flex;
   align-items: center;
   justify-content: space-between;
+
   gap: 12px;
 
   margin-bottom: 10px;
@@ -305,56 +419,71 @@ section h3 {
   align-items: center;
 
   min-height: 28px;
+
   padding: 3px 10px;
 
   border-radius: 999px;
-  background: #f0f2ff;
-  color: #4f46e5;
 
-  font-size: 0.78rem;
-  font-weight: 800;
-  letter-spacing: -0.015em;
+  background: var(--lavender-soft);
+
+  color: var(--lavender);
+
+  font-size: 0.75rem;
+  font-weight: 850;
+
+  letter-spacing: -0.02em;
 }
 
 .performance-title {
   margin: 0 0 8px;
 
-  color: #172033;
-  font-size: 1.12rem;
+  color: var(--ink);
+
+  font-size: 1.1rem;
   line-height: 1.45;
+
   font-weight: 800;
-  letter-spacing: -0.035em;
+
+  letter-spacing: -0.04em;
 }
 
 .performance-date {
-  color: #64748b;
-  font-size: 0.9rem;
+  color: var(--muted);
+
+  font-size: 0.86rem;
   font-weight: 600;
 }
 
 .materials {
   margin-top: 12px;
+
   padding: 10px 12px;
 
-  border-radius: 10px;
-  background: #f8fafc;
-  color: #475569;
+  border: 1px solid #eeeae2;
 
-  font-size: 0.88rem;
+  border-radius: var(--radius-sm);
+
+  background: var(--paper-soft);
+
+  color: #676d77;
+
+  font-size: 0.86rem;
 }
 
 .description {
   margin-top: 10px;
 
-  color: #64748b;
-  font-size: 0.9rem;
+  color: #7b8088;
+
+  font-size: 0.88rem;
+
   white-space: pre-wrap;
 }
 
 
-/* ---------------------------------------------------------
-   D-Day
-   --------------------------------------------------------- */
+/* =========================================================
+   D-DAY
+   ========================================================= */
 
 .dday {
   display: inline-flex;
@@ -363,34 +492,36 @@ section h3 {
 
   min-width: 66px;
   min-height: 30px;
+
   padding: 4px 10px;
 
   border-radius: 999px;
 
-  font-size: 0.76rem;
-  font-weight: 850;
-  letter-spacing: 0.01em;
+  font-size: 0.72rem;
+  font-weight: 900;
+
+  letter-spacing: 0.015em;
 }
 
 .dday-danger {
-  background: #fff0f0;
-  color: #dc2626;
+  background: var(--red-soft);
+  color: var(--red);
 }
 
 .dday-warning {
-  background: #fff7df;
-  color: #c27803;
+  background: var(--yellow-soft);
+  color: var(--yellow);
 }
 
 .dday-normal {
-  background: #edf7f1;
-  color: #15803d;
+  background: var(--green-soft);
+  color: var(--green);
 }
 
 
-/* ---------------------------------------------------------
-   전체 일정
-   --------------------------------------------------------- */
+/* =========================================================
+   ALL LIST
+   ========================================================= */
 
 #allList {
   display: grid;
@@ -400,13 +531,14 @@ section h3 {
 #subjectFilter {
   width: 100%;
   max-width: 300px;
+
   margin-bottom: 18px;
 }
 
 
-/* ---------------------------------------------------------
-   Select / Input / Textarea
-   --------------------------------------------------------- */
+/* =========================================================
+   FORM
+   ========================================================= */
 
 select,
 input[type="text"],
@@ -415,16 +547,17 @@ input[type="date"],
 textarea {
   width: 100%;
 
-  border: 1px solid #dce2ec;
-  border-radius: 11px;
+  border: 1px solid var(--line-dark);
+  border-radius: var(--radius-sm);
 
-  background: #ffffff;
-  color: #172033;
+  background: #fffefa;
+
+  color: var(--ink);
 
   transition:
-    border-color 0.18s ease,
-    box-shadow 0.18s ease,
-    background 0.18s ease;
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
 }
 
 select,
@@ -432,78 +565,110 @@ input[type="text"],
 input[type="password"],
 input[type="date"] {
   min-height: 44px;
+
   padding: 0 12px;
 }
 
 textarea {
   min-height: 90px;
+
   padding: 11px 12px;
+
   resize: vertical;
 }
 
 select:hover,
 input:hover,
 textarea:hover {
-  border-color: #c7cfdd;
+  border-color: #c9c4ba;
 }
 
 select:focus,
 input:focus,
 textarea:focus {
-  border-color: #818cf8;
+  border-color: #a29bc9;
+
   background: #ffffff;
-  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+
+  box-shadow:
+    0 0 0 4px rgba(129, 119, 184, 0.1);
+
   outline: none;
 }
 
 ::placeholder {
-  color: #a0a8b7;
+  color: #aaa9a4;
 }
 
 
-/* ---------------------------------------------------------
-   Empty 상태
-   --------------------------------------------------------- */
+/* =========================================================
+   EMPTY
+   ========================================================= */
 
 .empty {
   display: flex;
   align-items: center;
   justify-content: center;
 
-  min-height: 110px;
+  min-height: 120px;
+
   padding: 24px;
 
-  border: 1px dashed #d7deea;
-  border-radius: 16px;
+  border: 1px dashed #d9d5cd;
 
-  background: #fafbfe;
-  color: #8a94a6;
+  border-radius: var(--radius-md);
 
-  font-size: 0.94rem;
+  background: #fcfbf7;
+
+  color: #999990;
+
+  font-size: 0.9rem;
+
   text-align: center;
 }
 
 
-/* ---------------------------------------------------------
-   관리자 패널
-   --------------------------------------------------------- */
+/* =========================================================
+   ADMIN PANEL
+   ========================================================= */
 
 #adminPanel {
-  margin-top: 28px;
-  padding: 28px;
+  position: relative;
 
-  border: 1px solid #dddff4;
-  border-radius: 24px;
+  margin-top: 30px;
+
+  padding: 30px;
+
+  border: 1px solid #dedbe9;
+
+  border-radius: var(--radius-lg);
 
   background:
     linear-gradient(
       145deg,
-      #ffffff 0%,
-      #fafaff 100%
+      #fffefa 0%,
+      #faf8ff 100%
     );
 
   box-shadow:
-    0 16px 40px rgba(79, 70, 229, 0.07);
+    0 18px 45px rgba(75, 69, 110, 0.075);
+}
+
+#adminPanel::before {
+  content: "ADMIN";
+
+  position: absolute;
+
+  top: 24px;
+  right: 28px;
+
+  color: #b2accb;
+
+  font-size: 0.62rem;
+
+  font-weight: 900;
+
+  letter-spacing: 0.16em;
 }
 
 #adminPanel h2 {
@@ -512,13 +677,16 @@ textarea:focus {
 
 #adminPanel h3 {
   margin: 30px 0 14px;
-  font-size: 1.15rem;
+
+  color: #343946;
+
+  font-size: 1.1rem;
 }
 
 
-/* ---------------------------------------------------------
-   관리자 상단 영역
-   --------------------------------------------------------- */
+/* =========================================================
+   LOGOUT
+   ========================================================= */
 
 #logoutButton {
   display: inline-flex;
@@ -526,33 +694,38 @@ textarea:focus {
   justify-content: center;
 
   min-height: 40px;
+
   padding: 0 15px;
 
-  border: 1px solid #e1e5ec;
-  border-radius: 10px;
+  border: 1px solid var(--line);
 
-  background: #ffffff;
-  color: #64748b;
+  border-radius: 999px;
 
-  font-size: 0.88rem;
-  font-weight: 700;
+  background: #fffefa;
+
+  color: #777c85;
+
+  font-size: 0.84rem;
+  font-weight: 750;
 
   transition:
-    background 0.18s ease,
-    color 0.18s ease,
-    border-color 0.18s ease;
+    background 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
 }
 
 #logoutButton:hover {
-  border-color: #fecaca;
-  background: #fff5f5;
-  color: #dc2626;
+  border-color: #e8cfcf;
+
+  background: #fff7f7;
+
+  color: var(--red);
 }
 
 
-/* ---------------------------------------------------------
-   관리자 과목 선택
-   --------------------------------------------------------- */
+/* =========================================================
+   ADMIN SUBJECT
+   ========================================================= */
 
 #adminSubject {
   max-width: 360px;
@@ -562,15 +735,18 @@ textarea:focus {
   margin-top: 18px;
   margin-bottom: 12px;
 
-  color: #4f46e5;
-  font-size: 1.1rem;
-  font-weight: 800;
+  color: var(--lavender);
+
+  font-size: 1.08rem;
+  font-weight: 850;
+
+  letter-spacing: -0.025em;
 }
 
 
-/* ---------------------------------------------------------
-   수행평가 추가 폼
-   --------------------------------------------------------- */
+/* =========================================================
+   ADMIN INPUTS
+   ========================================================= */
 
 #adminPanel > div {
   position: relative;
@@ -582,10 +758,6 @@ textarea:focus {
 #performanceDescription {
   vertical-align: middle;
 }
-
-
-/* 입력창들이 한 줄로 배치되는 기존 HTML을
-   화면 크기에 맞게 자연스럽게 정리 */
 
 #performanceTitle {
   width: 210px;
@@ -601,15 +773,17 @@ textarea:focus {
 
 #performanceDescription {
   width: 250px;
+
   min-height: 44px;
   height: 44px;
+
   resize: vertical;
 }
 
 
-/* ---------------------------------------------------------
-   주요 버튼
-   --------------------------------------------------------- */
+/* =========================================================
+   PRIMARY BUTTONS
+   ========================================================= */
 
 #addPerformance,
 #loginButton {
@@ -618,32 +792,36 @@ textarea:focus {
   justify-content: center;
 
   min-height: 44px;
-  padding: 0 17px;
+
+  padding: 0 18px;
 
   border: 0;
-  border-radius: 11px;
+  border-radius: 999px;
 
-  background: #4f46e5;
+  background: var(--navy);
+
   color: #ffffff;
 
   font-weight: 800;
-  font-size: 0.9rem;
+  font-size: 0.88rem;
 
   box-shadow:
-    0 6px 14px rgba(79, 70, 229, 0.2);
+    0 7px 18px rgba(41, 52, 73, 0.17);
 
   transition:
-    transform 0.18s ease,
-    background 0.18s ease,
-    box-shadow 0.18s ease;
+    transform 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 #addPerformance:hover,
 #loginButton:hover {
-  transform: translateY(-1px);
-  background: #4338ca;
+  transform: translateY(-2px);
+
+  background: #202a3c;
+
   box-shadow:
-    0 9px 20px rgba(79, 70, 229, 0.26);
+    0 11px 24px rgba(41, 52, 73, 0.23);
 }
 
 #addPerformance:active,
@@ -652,9 +830,9 @@ textarea:focus {
 }
 
 
-/* ---------------------------------------------------------
-   관리자 목록
-   --------------------------------------------------------- */
+/* =========================================================
+   ADMIN LIST
+   ========================================================= */
 
 #adminList {
   display: grid;
@@ -665,23 +843,29 @@ textarea:focus {
   display: flex;
   align-items: center;
   justify-content: space-between;
+
   gap: 18px;
 
   padding: 15px 17px;
 
-  border: 1px solid #e7eaf0;
+  border: 1px solid var(--line);
+
   border-radius: 14px;
 
-  background: #ffffff;
+  background: rgba(255, 253, 248, 0.85);
 
   transition:
-    border-color 0.18s ease,
-    background 0.18s ease;
+    border-color 0.2s ease,
+    background 0.2s ease,
+    transform 0.2s ease;
 }
 
 .admin-performance:hover {
-  border-color: #d8def0;
-  background: #fafbff;
+  transform: translateX(2px);
+
+  border-color: #d8d3c9;
+
+  background: #ffffff;
 }
 
 .admin-performance strong {
@@ -689,59 +873,68 @@ textarea:focus {
 
   margin-bottom: 3px;
 
-  color: #172033;
-  font-size: 0.95rem;
+  color: var(--ink);
+
+  font-size: 0.94rem;
 }
 
 .admin-performance div div {
-  color: #7b8494;
-  font-size: 0.82rem;
+  color: #898d94;
+
+  font-size: 0.81rem;
 }
 
 .admin-performance small {
   display: block;
+
   margin-top: 5px;
-  color: #64748b;
+
+  color: #737982;
 }
 
 
-/* ---------------------------------------------------------
-   삭제 버튼
-   --------------------------------------------------------- */
+/* =========================================================
+   DELETE
+   ========================================================= */
 
 .delete-button {
   flex: 0 0 auto;
 
   min-height: 36px;
+
   padding: 0 12px;
 
-  border: 1px solid #fecaca;
-  border-radius: 9px;
+  border: 1px solid #edd1d1;
 
-  background: #fff7f7;
-  color: #dc2626;
+  border-radius: 999px;
 
-  font-size: 0.8rem;
-  font-weight: 750;
+  background: #fff8f8;
+
+  color: var(--red);
+
+  font-size: 0.78rem;
+  font-weight: 800;
 
   transition:
-    background 0.18s ease,
-    border-color 0.18s ease;
+    background 0.2s ease,
+    border-color 0.2s ease;
 }
 
 .delete-button:hover {
-  border-color: #fca5a5;
-  background: #fee2e2;
+  border-color: #e4baba;
+
+  background: #fceded;
 }
 
 
-/* ---------------------------------------------------------
-   로그인 모달
-   --------------------------------------------------------- */
+/* =========================================================
+   LOGIN MODAL
+   ========================================================= */
 
 #loginModal {
   position: fixed;
   inset: 0;
+
   z-index: 1000;
 
   display: flex;
@@ -750,9 +943,10 @@ textarea:focus {
 
   padding: 20px;
 
-  background: rgba(15, 23, 42, 0.48);
-  backdrop-filter: blur(7px);
-  -webkit-backdrop-filter: blur(7px);
+  background: rgba(30, 35, 45, 0.42);
+
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 #loginModal.hidden {
@@ -761,33 +955,40 @@ textarea:focus {
 
 #loginModal > div {
   width: min(430px, 100%);
-  padding: 30px;
 
-  border: 1px solid rgba(255, 255, 255, 0.7);
-  border-radius: 24px;
+  padding: 32px;
 
-  background: rgba(255, 255, 255, 0.97);
+  border: 1px solid rgba(255, 255, 255, 0.75);
+
+  border-radius: 26px;
+
+  background: rgba(255, 253, 248, 0.97);
 
   box-shadow:
-    0 25px 70px rgba(15, 23, 42, 0.22);
+    0 30px 80px rgba(25, 28, 36, 0.2);
 }
 
 #loginModal h2 {
   margin: 0 0 8px;
 
-  color: #111827;
+  color: var(--ink);
+
   font-size: 1.45rem;
-  letter-spacing: -0.04em;
+
+  letter-spacing: -0.045em;
 }
 
 #loginModal p {
   margin: 0 0 20px;
-  color: #7b8494;
-  font-size: 0.9rem;
+
+  color: var(--muted);
+
+  font-size: 0.88rem;
 }
 
 #passwordInput {
   width: 100%;
+
   margin-bottom: 10px;
 }
 
@@ -797,84 +998,93 @@ textarea:focus {
   justify-content: center;
 
   min-height: 44px;
+
   padding: 0 15px;
 
   margin-left: 7px;
 
-  border: 1px solid #e1e5ec;
-  border-radius: 11px;
+  border: 1px solid var(--line-dark);
 
-  background: #ffffff;
-  color: #64748b;
+  border-radius: 999px;
 
-  font-weight: 700;
+  background: #fffefa;
+
+  color: #727780;
+
+  font-weight: 750;
 
   transition:
-    background 0.18s ease,
-    border-color 0.18s ease;
+    background 0.2s ease,
+    border-color 0.2s ease;
 }
 
 #closeLogin:hover {
-  background: #f8fafc;
-  border-color: #cfd6e2;
+  background: #f7f5ef;
+
+  border-color: #cfc9bd;
 }
 
 #loginError {
   min-height: 22px;
+
   margin: 8px 0 0;
 
-  color: #dc2626;
-  font-size: 0.84rem;
-  font-weight: 650;
+  color: var(--red);
+
+  font-size: 0.82rem;
+  font-weight: 700;
 }
 
 
-/* ---------------------------------------------------------
-   hidden 유틸리티
-   --------------------------------------------------------- */
+/* =========================================================
+   HIDDEN
+   ========================================================= */
 
 .hidden {
   display: none !important;
 }
 
 
-/* ---------------------------------------------------------
-   스크롤바
-   --------------------------------------------------------- */
+/* =========================================================
+   SCROLLBAR
+   ========================================================= */
 
 ::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+  width: 9px;
+  height: 9px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #eef1f6;
+  background: #eeeae2;
 }
 
 ::-webkit-scrollbar-thumb {
-  border: 2px solid #eef1f6;
+  border: 2px solid #eeeae2;
+
   border-radius: 999px;
-  background: #c5ccda;
+
+  background: #c6c1b7;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #aeb7c7;
+  background: #aaa397;
 }
 
 
-/* ---------------------------------------------------------
-   반응형 - 태블릿
-   --------------------------------------------------------- */
+/* =========================================================
+   TABLET
+   ========================================================= */
 
 @media (max-width: 850px) {
   .header {
-    padding-top: 40px;
+    padding-top: 46px;
   }
 
   section,
   #adminPanel {
-    padding: 22px;
-    border-radius: 20px;
+    padding: 24px;
+
+    border-radius: 22px;
   }
 
   #performanceTitle {
@@ -891,13 +1101,13 @@ textarea:focus {
 }
 
 
-/* ---------------------------------------------------------
-   반응형 - 모바일
-   --------------------------------------------------------- */
+/* =========================================================
+   MOBILE
+   ========================================================= */
 
 @media (max-width: 640px) {
   body {
-    padding-bottom: 40px;
+    padding-bottom: 45px;
   }
 
   .header,
@@ -908,11 +1118,11 @@ textarea:focus {
   }
 
   .header {
-    padding: 34px 0 24px;
+    padding: 38px 0 28px;
   }
 
   .header h1 {
-    font-size: 2rem;
+    font-size: 2.15rem;
   }
 
   .header h1::before {
@@ -920,21 +1130,24 @@ textarea:focus {
   }
 
   .header p {
-    font-size: 0.92rem;
+    font-size: 0.9rem;
   }
 
   section,
   #adminPanel {
-    padding: 18px;
-    border-radius: 18px;
+    padding: 19px;
+
+    border-radius: 19px;
   }
 
   section h2 {
-    font-size: 1.3rem;
+    font-size: 1.28rem;
   }
 
   .performance-card {
-    padding: 17px;
+    padding: 18px;
+
+    border-radius: 16px;
   }
 
   .performance-top {
@@ -946,8 +1159,9 @@ textarea:focus {
   }
 
   .dday {
-    min-width: 60px;
-    font-size: 0.72rem;
+    min-width: 59px;
+
+    font-size: 0.7rem;
   }
 
   #subjectFilter,
@@ -957,7 +1171,9 @@ textarea:focus {
 
   #adminPanel > div {
     display: flex;
+
     flex-direction: column;
+
     gap: 9px;
   }
 
@@ -967,6 +1183,7 @@ textarea:focus {
   #performanceDescription,
   #addPerformance {
     width: 100%;
+
     max-width: none;
   }
 
@@ -983,19 +1200,21 @@ textarea:focus {
   }
 
   #loginModal > div {
-    padding: 24px;
-    border-radius: 20px;
+    padding: 25px;
+
+    border-radius: 22px;
   }
 }
 
 
-/* ---------------------------------------------------------
-   아주 작은 화면
-   --------------------------------------------------------- */
+/* =========================================================
+   VERY SMALL SCREEN
+   ========================================================= */
 
 @media (max-width: 400px) {
   .performance-top {
     flex-direction: column;
+
     gap: 7px;
   }
 
@@ -1005,6 +1224,7 @@ textarea:focus {
 
   .admin-performance {
     flex-direction: column;
+
     gap: 10px;
   }
 
@@ -1015,6 +1235,7 @@ textarea:focus {
   #loginButton,
   #closeLogin {
     width: 100%;
+
     margin: 0;
   }
 
@@ -1024,9 +1245,9 @@ textarea:focus {
 }
 
 
-/* ---------------------------------------------------------
-   모션 최소화 설정
-   --------------------------------------------------------- */
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
 
 @media (prefers-reduced-motion: reduce) {
   html {
